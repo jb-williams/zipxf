@@ -9,6 +9,9 @@
 *.test
 test*
 zipxf
+bin
+pkg
+*.zip
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
