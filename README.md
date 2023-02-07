@@ -13,8 +13,6 @@ zipxf [-z] [archive_name] [-u] [archive_name]
 ex:
 zipxf -z archive.zip
 zipxf -u archive.zip
-<<<<<<< HEAD
-=======
 ```
 
 ### Install
@@ -40,5 +38,4 @@ make super
 
 # Man (untested) moves man page to man1
 make man
->>>>>>> makefile
 ```
