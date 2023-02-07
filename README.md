@@ -1,5 +1,4 @@
-# Zipxf(Move to its own Repo, NO MAINTAINTED)
-https://github.com/jb-williams/zipxf
+# Zipxf
 
 A little program I hacked together to zip an archive and unzip an archive.
 Usage:
