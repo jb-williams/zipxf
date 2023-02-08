@@ -11,13 +11,12 @@ import (
 	"strings"
 )
 
-// var pl = fmt.Println
 var fpf = fmt.Fprintf
 
 func main() {
 	help := flag.Bool("h", false, "Show help")
-	action_zip := flag.String("z", "archive.zip", "Zip files into and Archive.")
-	action_unzip := flag.String("u", "", "Unzip archive.")
+	action_zip := flag.String("zip", "archive.zip", "Zip all files in current working dir into an Archive.\n\tDefault: archive.zip")
+	action_unzip := flag.String("unzip", "", "Unzip Archive into current working dir.")
 	flag.Parse()
 
 	workingDir, err := os.Getwd()
