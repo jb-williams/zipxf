@@ -37,14 +37,13 @@ build:
 clean:
 	@echo "cleaning up..."
 	@rm -rf $(BUILDPATH)/bin/$(EXENAME)
-	@rm -rf $(BUILDPATH)/pkg
 
 super:
 	@echo "super clean"
-	@rm -rf $(BUILDPATH)/bin
+	@rm -rf $(BUILDPATH)/bin/$(EXENAME)
 	@rm -rf $(BUILDPATH)/pkg
 
 man:
-	@sudo cp $(BUILDPATH)/$(MANNAME) /usr/share/man/man1/$(MANNAME)
+	@if [ ! -f /usr/share/man/man1/$(MANNAME) ] ; then sudo cp $(BUILDPATH)/$(MANNAME) /usr/share/man/man1/$(MANNAME)
 
 all: makedir build
