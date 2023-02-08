@@ -1,7 +1,7 @@
 # Zipxf
 
-A little program I hacked together to zip an archive and unzip an archive.
-Really only works correctly with it is place within your $PATH which everything in your current working directory
+A little program I hacked together to zip an archive and unzip an archive. \
+Really only works correctly with if it is placed within your $PATH which everything in your current working directory.
 Usage:
 ```
 zipxf [-z] [archive_name] [-u] [archive_name]
