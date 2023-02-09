@@ -43,6 +43,6 @@ make super
 # Man (untested) moves man page to man1
 make man
 ```
-TODO:
-[X] - Finish implementing tar.gz functionality
+TODO: \
+[X] - Finish implementing tar.gz functionality \
 [ ] - Implement un-tar.gz functionality
