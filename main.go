@@ -11,8 +11,10 @@ var fpf = fmt.Fprintf
 
 func main() {
 	help := flag.Bool("h", false, "Show help")
-	action_zip := flag.String("zip", "archive.zip", "Zip all files in current working dir into an Archive.\n\tDefault: archive.zip")
-	action_unzip := flag.String("unzip", "", "Unzip Archive into current working dir.")
+	action_zip := flag.String("z", "", "Zip all files in current working dir into an Archive.")
+	action_unzip := flag.String("uz", "", "Unzip Archive into current working dir.")
+	action_targz := flag.String("t", "", "Tar Gz all in current working dir.")
+	action_utargz := flag.String("ut", "", "Un-Tar Gz all in current working dir.")
 	flag.Parse()
 
 	workingDir, err := os.Getwd()
@@ -22,10 +24,16 @@ func main() {
 
 	switch {
 	case *action_zip != "":
-		ZipinArchive(&workingDir, action_zip)
+		zipinArchive(&workingDir, action_zip)
 
 	case *action_unzip != "":
-		UnZipArchive(&workingDir, action_unzip)
+		unZipArchive(&workingDir, action_unzip)
+
+	case *action_targz != "":
+		tarGzipArchive(&workingDir, action_targz)
+
+	case *action_utargz != "":
+		utarGzipArchive(&workingDir, action_utargz)
 
 	case *help:
 		flag.Usage()

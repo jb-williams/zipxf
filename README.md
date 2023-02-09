@@ -4,15 +4,19 @@ A little program I hacked together to zip an archive and unzip an archive. \
 Really only works correctly with if it is placed within your $PATH which everything in your current working directory.
 Usage:
 ```
-zipxf [-z] [archive_name] [-u] [archive_name]
-        CANNOT USE BOTH -z and -u
-    -h  - Shows this menu.
-    -z  - Zips all files in Current Working Directory into an Archive. Default: archive.zip
-    -u  - Unzips Archive into Current Working Directory
+zipxf [-z archive_name] [-uz archive_name] [-t archive_name] [-ut archive_name]
+        CAN ONLY USE ONE AT A TIME
+    -h   - Shows this menu.
+    -z   - Zips all files in Current Working Directory into an Archive.
+    -uz  - Unzips Archive into Current Working Directory.
+    -t   - (Not Working)TarGz's all files in Current Working Dirctory into an Archive.
+    -ut  - (Not Working)Un-TarGz Archive into Current Working Directory.
 
 ex:
 zipxf -z archive.zip
 zipxf -u archive.zip
+zipxf -t archive.zip
+zipxf -ut archive.zip
 ```
 
 ### Install
@@ -39,3 +43,6 @@ make super
 # Man (untested) moves man page to man1
 make man
 ```
+TODO:
+[ ] - Finish implementing tar.gz functionality
+[ ] - Implement un-tar.gz functionality

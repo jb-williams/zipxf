@@ -9,9 +9,9 @@ import (
 	"strings"
 )
 
-func ZipinArchive(workingDir *string, action_zip *string) {
-	archive, err := os.Create(*workingDir + "/" + *action_zip)
+func zipinArchive(workingDir *string, action_zip *string) {
 	fpf(os.Stdout, "Creating zip archive... %s\n", (*workingDir + "/" + *action_zip))
+	archive, err := os.Create(*workingDir + "/" + *action_zip)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,7 +44,7 @@ func ZipinArchive(workingDir *string, action_zip *string) {
 	}
 }
 
-func UnZipArchive(workingDir *string, action_unzip *string) {
+func unZipArchive(workingDir *string, action_unzip *string) {
 	dest := *action_unzip
 	fpf(os.Stdout, "Opening zip archive... %s\n", *action_unzip)
 	//fpf(os.Stdout, "Opening zip archive... %s\n", (workingDir + "/" + *outputArchive))
