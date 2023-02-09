@@ -10,11 +10,11 @@ zipxf [-z archive_name] [-uz archive_name] [-t archive_name] [-ut archive_name]
     -z   - Zips all files in Current Working Directory into an Archive.
     -uz  - Unzips Archive into Current Working Directory.
     -t   - TarGz's all files in Current Working Dirctory into an Archive.
-    -ut
+    -ut  - (NotWorking) Un-TarGz Archive into Current Working Directory.
 
 ex:
 zipxf -z archive.zip
-zipxf -u archive.zip
+zipxf -uz archive.zip
 zipxf -t archive.zip
 zipxf -ut archive.zip
 ```
