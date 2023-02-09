@@ -2,7 +2,6 @@ package main
 
 import (
 	"archive/tar"
-	"bytes"
 	"compress/gzip"
 	"io"
 	"log"
@@ -21,10 +20,11 @@ func tarGzipArchive(workingDir *string, action_targz *string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	var buf bytes.Buffer
-	gzWriter := gzip.NewWriter(&buf)
+	//var buf bytes.Buffer
+	gzWriter := gzip.NewWriter(archive)
 	defer gzWriter.Close()
 	tarWriter := tar.NewWriter(gzWriter)
+	//tarWriter := tar.NewWriter(archive)
 	defer tarWriter.Close()
 
 	for _, file := range fileNames {
@@ -43,7 +43,7 @@ func tarGzipArchive(workingDir *string, action_targz *string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		header.Name = *action_targz
+		header.Name = file.Name()
 
 		err = tarWriter.WriteHeader(header)
 		if err != nil {

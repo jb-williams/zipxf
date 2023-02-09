@@ -9,8 +9,8 @@ zipxf [-z archive_name] [-uz archive_name] [-t archive_name] [-ut archive_name]
     -h   - Shows this menu.
     -z   - Zips all files in Current Working Directory into an Archive.
     -uz  - Unzips Archive into Current Working Directory.
-    -t   - (Not Working)TarGz's all files in Current Working Dirctory into an Archive.
-    -ut  - (Not Working)Un-TarGz Archive into Current Working Directory.
+    -t   - TarGz's all files in Current Working Dirctory into an Archive.
+    -ut
 
 ex:
 zipxf -z archive.zip
@@ -44,5 +44,5 @@ make super
 make man
 ```
 TODO:
-[ ] - Finish implementing tar.gz functionality
+[X] - Finish implementing tar.gz functionality
 [ ] - Implement un-tar.gz functionality
