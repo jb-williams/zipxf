@@ -43,6 +43,7 @@ make super
 # Man (untested) moves man page to man1
 make man
 ```
+As it is my First Go Program, I'm having trouble with figuring out how to untar the archive.
 TODO: \
 [X] - Finish implementing tar.gz functionality \
 [ ] - Implement un-tar.gz functionality
