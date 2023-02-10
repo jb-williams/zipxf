@@ -8,6 +8,7 @@ import (
 )
 
 var fpf = fmt.Fprintf
+var lff = log.Fatalf
 
 func main() {
 	help := flag.Bool("h", false, "Show help")
