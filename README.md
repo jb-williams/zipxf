@@ -19,8 +19,8 @@ zipxf -t archive.zip
 zipxf -ut archive.zip
 ```
 
-### Install
-Been messing with a make file to build locally
+#### Makefile
+Been messing with a makefile for me to build locally.
 ```
 # Show values of vars
 make echo
@@ -31,7 +31,7 @@ make makedir
 # Compile Executable, Rename it and move to /bin dir
 make build
 
-# Build all makdir/buil
+# Build all makdir/build
 make all
 
 # Clean up
@@ -43,11 +43,10 @@ make super
 # Man (untested) moves man page to man1
 make man
 ```
-BUGS:
-* Ziping redundantly zips the .zip file into itself
-* TarGzing redundantly targzips the .tar.gz file into itself
+BUGS: \
+ \
 TODO: \
 [X] - Finish implementing tar.gz functionality \
 [X] - Implement un-tar.gz functionality \
-[ ] - Fix Redudant Zipping \
-[ ] - Fix Redudant TarGziing \
+[X] - Fix Redudant Zipping \
+[X] - Fix Redudant TarGziing \
