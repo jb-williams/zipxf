@@ -12,15 +12,15 @@ var lff = log.Fatalf
 
 func main() {
 	help := flag.Bool("h", false, "Show help")
-	action_zip := flag.String("z", "", "Zip all files in current working dir into an Archive.")
+	action_zip := flag.String("z", "", "(redundant zipping)Zip all files in current working dir into an Archive.")
 	action_unzip := flag.String("uz", "", "Unzip Archive into current working dir.")
-	action_targz := flag.String("t", "", "Tar Gz all in current working dir.")
-	action_utargz := flag.String("ut", "", "(NotWorking)Un-Tar Gz all in current working dir.")
+	action_targz := flag.String("t", "", "(redundant targzing)Tar Gz all in current working dir.")
+	action_utargz := flag.String("ut", "", "Un-Tar Gz all in current working dir.")
 	flag.Parse()
 
 	workingDir, err := os.Getwd()
 	if err != nil {
-		log.Fatal(err)
+		lff("workingDir: Getwd(): failed %w", err.Error())
 	}
 
 	switch {

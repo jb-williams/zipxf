@@ -6,19 +6,23 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
 func tarGzipArchive(workingDir *string, action_targz *string) {
 	fpf(os.Stdout, "Creating zip archive... %s\n", (*workingDir + "/" + *action_targz))
+
 	archive, err := os.Create(*workingDir + "/" + *action_targz)
 	if err != nil {
-		log.Fatal(err)
+		lff("archive: Create(): failed %w", err.Error())
 	}
 	defer archive.Close()
 
 	fileNames, err := os.ReadDir(*workingDir)
 	if err != nil {
 		log.Fatal(err)
+		lff("fileNames: ReadDir(): failed %w", err.Error())
 	}
 
 	gzWriter := gzip.NewWriter(archive)
@@ -29,29 +33,30 @@ func tarGzipArchive(workingDir *string, action_targz *string) {
 
 	for _, file := range fileNames {
 		fpf(os.Stdout, "Archiving file.... %s\n", file)
+
 		files, err := os.Open(file.Name())
 		if err != nil {
-			log.Fatal(err)
+			lff("files: Open(): failed %w", err.Error())
 		}
 		defer files.Close()
 		info, err := files.Stat()
 		if err != nil {
-			log.Fatal(err)
+			lff("info: files.Stat(): failed %w", err.Error())
 		}
 
 		header, err := tar.FileInfoHeader(info, info.Name())
 		if err != nil {
-			log.Fatal(err)
+			lff("header: NewReader(): failed %w", err.Error())
 		}
 		header.Name = file.Name()
 
 		err = tarWriter.WriteHeader(header)
 		if err != nil {
-			log.Fatal(err)
+			lff("tarWriter: WriteHeater(): failed %w", err.Error())
 		}
 
 		if _, err := io.Copy(tarWriter, files); err != nil {
-			log.Fatal(err)
+			lff("tarWriter: Copy(): failed %w", err.Error())
 		}
 	}
 
@@ -59,84 +64,54 @@ func tarGzipArchive(workingDir *string, action_targz *string) {
 
 func utarGzipArchive(workingDir *string, action_utargz *string) {
 	fpf(os.Stdout, "Un-Tar.Gz-ing... %s\n", (*workingDir + "/" + *action_utargz))
+
 	myReader, err := os.Open(*action_utargz)
 	if err != nil {
-		log.Fatal("openreader failed")
+		lff("myReader: Open(): failed %w", err.Error())
 	}
+
 	ugziper, err := gzip.NewReader(myReader)
 	if err != nil {
-		log.Fatal("new gz reader failed")
+		lff("ugziper: NewReader(): failed %w", err.Error())
 	}
 	defer ugziper.Close()
 
 	untargz := tar.NewReader(ugziper)
 	if err != nil {
-		log.Fatal("new tar reader failed")
+		lff("untargz: NewReader(): failed %w", err.Error())
 	}
-	var header *tar.Header
-	for header, err = untargz.Next(); err == nil; header, err = untargz.Next() {
-		switch header.Typeflag {
-		case tar.TypeDir:
-			if err := os.Mkdir(header.Name, 0755); err != nil {
-				lff("ExtractTarGz: Mkdir() failed: %w", err.Error())
-			}
-		case tar.TypeReg:
-			outFile, err := os.Create(header.Name)
-			if err != nil {
-				lff("ExtractTarGz: Create() failed: %w", err.Error())
-			}
 
-			if _, err := io.Copy(outFile, untargz); err != nil {
-				// outFile.Close error omitted as Copy error is more interesting at this point
-				outFile.Close()
-				lff("ExtractTarGz: Copy() failed: %w", err.Error())
-			}
-			if err := outFile.Close(); err != nil {
-				lff("ExtractTarGz: Close() failed: %w", err.Error())
-			}
-		default:
-			lff("ExtractTarGz: uknown type: %b in %s", header.Typeflag, header.Name)
+	for {
+		header, err := untargz.Next()
+		if err == io.EOF {
+			break
 		}
+		if err != nil {
+			lff("header: err != nil %w", err.Error())
+		}
+
+		filePath := filepath.Join(strings.TrimSuffix(*action_utargz, filepath.Ext(*action_utargz)), header.Name)
+
+		if header.FileInfo().IsDir() {
+			if err := os.MkdirAll(filePath, os.ModePerm); err != nil {
+				lff("headerfileinfoisdir: MkdirAll() %w", err.Error())
+			}
+			continue
+		}
+
+		if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
+			lff("headerfileinfoisdir: filepath.Dir() %w", err.Error())
+		}
+
+		destFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, header.FileInfo().Mode())
+		if err != nil {
+			lff("destFile: OpenFile() %w", err.Error())
+		}
+
+		if _, err := io.Copy(destFile, untargz); err != nil {
+			lff("Last: Copy(): failed %w", err.Error())
+		}
+
+		destFile.Close()
 	}
-	if err != io.EOF {
-		lff("ExtractTarGz: Next() failed: %w", err)
-	}
-	// //////// this goes back to untargz declaration if works
-	// for {
-	// 	header, err := untargz.Next()
-
-	// 	// if err != nil {
-	// 	// 	log.Fatal("EOF fail")
-	// 	// }
-	// 	if err == io.EOF {
-	// 		log.Fatal("EOF fail")
-	// 		//log.Fatal(err)
-	// 	}
-
-	// 	if err != nil {
-	// 		lff("unTarGzip: Next() failed: %s", err.Error())
-	// 	}
-
-	// 	switch header.Typeflag {
-	// 	case tar.TypeDir:
-	// 		if err := os.Mkdir(header.Name, 0755); err != nil {
-	// 			//log.Fatal(err)
-	// 			lff("unTarGzip: Mkdir() failed: %s", err.Error())
-	// 		}
-
-	// 	case tar.TypeReg:
-	// 		outFile, err := os.Create(header.Name)
-	// 		if err != nil {
-	// 			//log.Fatal(err)
-	// 			lff("unTarGzip: Create() failed: %s", err.Error())
-	// 		}
-	// 		if _, err := io.Copy(outFile, untargz); err != nil {
-	// 			//log.Fatal(err)
-	// 			lff("unTarGzip: Copy() failed: %s", err.Error())
-	// 		}
-	// 		outFile.Close()
-	// 	default:
-	// 		lff("unTarGzip: unknown type: %b in %s", header.Typeflag, header.Name)
-	// 	}
-	//}
 }

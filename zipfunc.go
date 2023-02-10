@@ -3,7 +3,6 @@ package main
 import (
 	"archive/zip"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -11,15 +10,16 @@ import (
 
 func zipinArchive(workingDir *string, action_zip *string) {
 	fpf(os.Stdout, "Creating zip archive... %s\n", (*workingDir + "/" + *action_zip))
+
 	archive, err := os.Create(*workingDir + "/" + *action_zip)
 	if err != nil {
-		log.Fatal(err)
+		lff("archive: Create(): failed %w", err.Error())
 	}
 	defer archive.Close()
 
 	fileNames, err := os.ReadDir(*workingDir)
 	if err != nil {
-		log.Fatal(err)
+		lff("fileNames: ReadDir(): failed %w", err.Error())
 	}
 
 	zipWriter := zip.NewWriter(archive)
@@ -27,62 +27,61 @@ func zipinArchive(workingDir *string, action_zip *string) {
 
 	for _, file := range fileNames {
 		fpf(os.Stdout, "Archiving file.... %s\n", file)
+
 		files, err := os.Open(file.Name())
 		if err != nil {
-			log.Fatal(err)
+			lff("files: Open(): failed %w", err.Error())
 		}
 		defer files.Close()
 
-		writer, err := zipWriter.Create(files.Name())
+		myWriter, err := zipWriter.Create(files.Name())
 		if err != nil {
-			log.Fatal(err)
+			lff("myWriter: Create(): failed %w", err.Error())
 		}
 
-		if _, err := io.Copy(writer, files); err != nil {
-			log.Fatal(err)
+		if _, err := io.Copy(myWriter, files); err != nil {
+			lff("err: Copy(myWriter, files): failed %w", err.Error())
 		}
 	}
 }
 
 func unZipArchive(workingDir *string, action_unzip *string) {
-	dest := *action_unzip
 	fpf(os.Stdout, "Opening zip archive... %s\n", *action_unzip)
-	//fpf(os.Stdout, "Opening zip archive... %s\n", (workingDir + "/" + *outputArchive))
+
+	dest := *action_unzip
 	archive, err := zip.OpenReader(*workingDir + "/" + *action_unzip)
 	if err != nil {
-		log.Fatal(err)
+		lff("archive: OpenReader(): failed %w", err.Error())
 	}
 	defer archive.Close()
 
 	for _, file := range archive.File {
 		filePath := filepath.Join(strings.TrimSuffix(dest, filepath.Ext(dest)), file.Name)
-		//pl("unzipping file ", filePath)
 		fpf(os.Stdout, "Unzipping file... %s\n", filePath)
 
 		if file.FileInfo().IsDir() {
-			//pl("creating directory...")
 			if err := os.MkdirAll(filePath, os.ModePerm); err != nil {
-				log.Fatal(err)
+				lff("fileinfo.isdir: MkdirAll(): failed %w", err.Error())
 			}
 			continue
 		}
 
 		if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
-			log.Fatal(err)
+			lff("mkdirall: filepath.dir(): failed %w", err.Error())
 		}
 
 		destFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, file.Mode())
 		if err != nil {
-			log.Fatal(err)
+			lff("destFile: OpenFile(): failed %w", err.Error())
 		}
 
 		fileInArchive, err := file.Open()
 		if err != nil {
-			log.Fatal(err)
+			lff("fileInArchive: Getwd(): failed %w", err.Error())
 		}
 
 		if _, err := io.Copy(destFile, fileInArchive); err != nil {
-			log.Fatal(err)
+			lff("writingout: Copy(): failed %w", err.Error())
 		}
 
 		destFile.Close()

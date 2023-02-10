@@ -7,10 +7,10 @@ Usage:
 zipxf [-z archive_name] [-uz archive_name] [-t archive_name] [-ut archive_name]
         CAN ONLY USE ONE AT A TIME
     -h   - Shows this menu.
-    -z   - Zips all files in Current Working Directory into an Archive.
+    -z   - (Redundantly Zips itself)Zips all files in Current Working Directory into an Archive.
     -uz  - Unzips Archive into Current Working Directory.
-    -t   - TarGz's all files in Current Working Dirctory into an Archive.
-    -ut  - (NotWorking) Un-TarGz Archive into Current Working Directory.
+    -t   - (Redundantly TarGz's itself)TarGz's all files in Current Working Dirctory into an Archive.
+    -ut  - Un-TarGz Archive into Current Working Directory.
 
 ex:
 zipxf -z archive.zip
@@ -43,7 +43,11 @@ make super
 # Man (untested) moves man page to man1
 make man
 ```
-As it is my First Go Program, I'm having trouble with figuring out how to untar the archive.
+BUGS:
+* Ziping redundantly zips the .zip file into itself
+* TarGzing redundantly targzips the .tar.gz file into itself
 TODO: \
 [X] - Finish implementing tar.gz functionality \
-[ ] - Implement un-tar.gz functionality
+[X] - Implement un-tar.gz functionality \
+[ ] - Fix Redudant Zipping \
+[ ] - Fix Redudant TarGziing \
