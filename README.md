@@ -1,5 +1,5 @@
 # Zipxf
-
+*first program, no tutorials*
 A little program I hacked together to zip an archive and unzip an archive. \
 Really only works correctly with if it is placed within your $PATH which everything in your current working directory.
 Usage:
