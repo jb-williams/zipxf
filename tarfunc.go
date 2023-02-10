@@ -31,6 +31,8 @@ func tarGzipArchive(workingDir *string, action_targz *string) {
 
 	for _, file := range fileNames {
 		fpf(os.Stdout, "Archiving file.... %s\n", file)
+		if file.IsDir() {
+		}
 		files, err := os.Open(file.Name())
 		if err != nil {
 			log.Fatal(err)
