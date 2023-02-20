@@ -14,7 +14,7 @@ func tarGzipArchive(workingDir *string, action_targz *string) {
 	fpf(os.Stdout, "Creating zip archive... %s\n", (*workingDir + "/" + *action_targz))
 	fileNames, err := os.ReadDir(*workingDir)
 	if err != nil {
-		lff("Tar: fileNames: ReadDi(): failed: %w", err.Error())
+		lff("Tar: fileNames: ReadDir(): failed: %w", err.Error())
 	}
 
 	archive, err := os.Create(*workingDir + "/" + *action_targz)
