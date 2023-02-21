@@ -29,9 +29,9 @@ makedir:
 
 build:
 	@echo "start building executable..."
-	$(GOBUILD) $(EXEBUILD)
-	@echo "moving executable..."
-	@mv $(BUILDPATH)/$(EXEFILE) $(BUILDPATH)/bin/$(EXENAME)
+	GOARCH=amd64 GOOS=linux go build 
+	GOARCH=amd64 GOOS=darwin go build
+	GOARCH=amd64 GOOS=windows go build
 	@echo "completed..."
 
 clean:

@@ -22,6 +22,7 @@ func main() {
 	if err != nil {
 		lff("workingDir: Getwd(): failed %w", err.Error())
 	}
+
 	osSep := string(os.PathSeparator)
 
 	switch {

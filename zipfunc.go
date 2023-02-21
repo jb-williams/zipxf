@@ -28,6 +28,7 @@ func zipinArchive(workingDir *string, action_zip *string, osSep string) {
 
 	for _, file := range fileNames {
 		fpf(os.Stdout, "Archiving file.... %s\n", file)
+
 		files, err := os.Open(file.Name())
 		if err != nil {
 			log.Fatal(err)
@@ -47,7 +48,9 @@ func zipinArchive(workingDir *string, action_zip *string, osSep string) {
 
 func unZipArchive(workingDir *string, action_unzip *string, osSep string) {
 	dest := *action_unzip
+
 	fpf(os.Stdout, "Opening zip archive... %s\n", *action_unzip)
+
 	archive, err := zip.OpenReader(*workingDir + osSep + *action_unzip)
 	if err != nil {
 		log.Fatal(err)
@@ -56,10 +59,10 @@ func unZipArchive(workingDir *string, action_unzip *string, osSep string) {
 
 	for _, file := range archive.File {
 		filePath := filepath.Join(strings.TrimSuffix(dest, filepath.Ext(dest)), file.Name)
+
 		fpf(os.Stdout, "Unzipping file... %s\n", filePath)
 
 		if file.FileInfo().IsDir() {
-			//pl("creating directory...")
 			if err := os.MkdirAll(filePath, os.ModePerm); err != nil {
 				log.Fatal(err)
 			}

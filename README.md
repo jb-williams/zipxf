@@ -3,6 +3,7 @@
 A little program I hacked together to zip an archive and unzip an archive. \
 Really Only Works correctly with if it is placed within your `$PATH`, unless ran in current directory with `./zipxf`.
 Does not work when there are non-compressed/archived directories in current working directory, only with files/compressed/archived items in current working directory.
+WINDOWS NOT TESTED
 Usage:
 ```
 zipxf [-z archive_name] [-uz archive_name] [-t archive_name] [-ut archive_name]
