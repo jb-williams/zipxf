@@ -32,7 +32,7 @@ build:
 	@echo "start building executables..."
 	GOARCH=amd64 GOOS=linux go build -o ./bin/$(EXENAME)-linux
 	GOARCH=amd64 GOOS=darwin go build -o ./bin/$(EXENAME)-darwin
-	GOARCH=amd64 GOOS=windows go build -o ./bin/$(EXENAME)-windows
+	GOARCH=amd64 GOOS=windows go build -o ./bin/$(EXENAME).exe
 	@echo "completed..."
 
 clean:
