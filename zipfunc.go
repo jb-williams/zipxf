@@ -9,15 +9,15 @@ import (
 	"strings"
 )
 
-func zipinArchive(workingDir *string, action_zip *string) {
-	fpf(os.Stdout, "Creating zip archive... %s\n", (*workingDir + "/" + *action_zip))
+func zipinArchive(workingDir *string, action_zip *string, osSep string) {
+	fpf(os.Stdout, "Creating zip archive... %s\n", *action_zip)
 
 	fileNames, err := os.ReadDir(*workingDir)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	archive, err := os.Create(*workingDir + "/" + *action_zip)
+	archive, err := os.Create(*workingDir + osSep + *action_zip)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -45,11 +45,10 @@ func zipinArchive(workingDir *string, action_zip *string) {
 	}
 }
 
-func unZipArchive(workingDir *string, action_unzip *string) {
+func unZipArchive(workingDir *string, action_unzip *string, osSep string) {
 	dest := *action_unzip
 	fpf(os.Stdout, "Opening zip archive... %s\n", *action_unzip)
-	//fpf(os.Stdout, "Opening zip archive... %s\n", (workingDir + "/" + *outputArchive))
-	archive, err := zip.OpenReader(*workingDir + "/" + *action_unzip)
+	archive, err := zip.OpenReader(*workingDir + osSep + *action_unzip)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,7 +56,6 @@ func unZipArchive(workingDir *string, action_unzip *string) {
 
 	for _, file := range archive.File {
 		filePath := filepath.Join(strings.TrimSuffix(dest, filepath.Ext(dest)), file.Name)
-		//pl("unzipping file ", filePath)
 		fpf(os.Stdout, "Unzipping file... %s\n", filePath)
 
 		if file.FileInfo().IsDir() {

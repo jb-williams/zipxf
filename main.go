@@ -22,19 +22,20 @@ func main() {
 	if err != nil {
 		lff("workingDir: Getwd(): failed %w", err.Error())
 	}
+	osSep := string(os.PathSeparator)
 
 	switch {
 	case *action_zip != "":
-		zipinArchive(&workingDir, action_zip)
+		zipinArchive(&workingDir, action_zip, osSep)
 
 	case *action_unzip != "":
-		unZipArchive(&workingDir, action_unzip)
+		unZipArchive(&workingDir, action_unzip, osSep)
 
 	case *action_targz != "":
-		tarGzipArchive(&workingDir, action_targz)
+		tarGzipArchive(&workingDir, action_targz, osSep)
 
 	case *action_utargz != "":
-		utarGzipArchive(&workingDir, action_utargz)
+		utarGzipArchive(&workingDir, action_utargz, osSep)
 
 	case *help:
 		flag.Usage()

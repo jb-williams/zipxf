@@ -10,14 +10,14 @@ import (
 	"strings"
 )
 
-func tarGzipArchive(workingDir *string, action_targz *string) {
-	fpf(os.Stdout, "Creating zip archive... %s\n", (*workingDir + "/" + *action_targz))
+func tarGzipArchive(workingDir *string, action_targz *string, osSep string) {
+	fpf(os.Stdout, "Creating zip archive... %s\n", *action_targz)
 	fileNames, err := os.ReadDir(*workingDir)
 	if err != nil {
 		lff("Tar: fileNames: ReadDir(): failed: %w", err.Error())
 	}
 
-	archive, err := os.Create(*workingDir + "/" + *action_targz)
+	archive, err := os.Create(*workingDir + osSep + *action_targz)
 	if err != nil {
 		lff("Tar: archive: Create(): failed: %w", err.Error())
 	}
@@ -62,15 +62,13 @@ func tarGzipArchive(workingDir *string, action_targz *string) {
 
 }
 
-func utarGzipArchive(workingDir *string, action_utargz *string) {
-	fpf(os.Stdout, "Un-Tar.Gz-ing... %s\n", (*workingDir + "/" + *action_utargz))
-	//myReader, err := tar.OpenReader(*action_utargz)
+func utarGzipArchive(workingDir *string, action_utargz *string, osSep string) {
+	fpf(os.Stdout, "Un-Tar.Gz-ing... %s\n", (*action_utargz))
 	myReader, err := os.Open(*action_utargz)
 	if err != nil {
 		lff("Untar: myReader: Open(): failed: %w", err.Error())
 	}
 	ugziper, err := gzip.NewReader(myReader)
-	// ugziper, err := gzip.NewReader(io.Reader(*action_utargz))
 	if err != nil {
 		lff("Untar: ugziper: NewReader(): failed %w", err.Error())
 	}
@@ -80,11 +78,10 @@ func utarGzipArchive(workingDir *string, action_utargz *string) {
 	if err != nil {
 		lff("Untar: untargz: NewReader(): failed %w", err.Error())
 	}
-	// Open and iterate through the files in the archive.
 	for {
 		header, err := untargz.Next()
 		if err == io.EOF {
-			break // End of archive
+			break
 		}
 		if err != nil {
 			lff("Untar: header: untargz.Next(): failed: %w", err.Error())

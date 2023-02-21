@@ -33,4 +33,4 @@ TODO: \
 [X] - Fix Redudant Zipping \
 [X] - Fix Redudant TarGziing \
 [ ] - Make it include directories(won't work with directories in pwd)
-[ ] - Make it OS agnostic
+[/] - Make it OS agnostic(NOT TESTED)
