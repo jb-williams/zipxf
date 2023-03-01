@@ -9,47 +9,86 @@ import (
 	"strings"
 )
 
-func zipinArchive(workingDir *string, action_zip *string, osSep string) {
-	fpf(os.Stdout, "Creating zip archive... %s\n", *action_zip)
+func zipinArchive(zipWriter *zip.Writer, workingDir, myArchive, osSep string) {
 
-	fileNames, err := os.ReadDir(*workingDir)
+	fileNames, err := os.ReadDir(workingDir)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	archive, err := os.Create(*workingDir + osSep + *action_zip)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer archive.Close()
-
-	zipWriter := zip.NewWriter(archive)
-	defer zipWriter.Close()
 
 	for _, file := range fileNames {
-		fpf(os.Stdout, "Archiving file.... %s\n", file)
+		if !file.IsDir() && file.Name() != myArchive {
+			//fpf(os.Stdout, "Archiving file.... %s\n", file)
 
-		files, err := os.Open(file.Name())
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer files.Close()
+			files, err := os.ReadFile(workingDir + osSep + file.Name())
+			if err != nil {
+				log.Fatal(err)
+			}
 
-		writer, err := zipWriter.Create(files.Name())
-		if err != nil {
-			log.Fatal(err)
-		}
+			writer, err := zipWriter.Create(file.Name())
+			if err != nil {
+				log.Fatal(err)
+			}
+			_, err = writer.Write(files)
+			if err != nil {
+				log.Fatal(err)
+			}
+			// if _, err := io.Copy(writer, files); err != nil {
+			// 	log.Fatal(err)
+			// }
+		} else if file.IsDir() && file.Name() != myArchive {
+			newBase := workingDir + osSep + file.Name()
+			if err := os.MkdirAll(newBase, os.ModePerm); err != nil {
+				log.Fatal(err)
+			}
 
-		if _, err := io.Copy(writer, files); err != nil {
-			log.Fatal(err)
+			zipinArchive(zipWriter, newBase, newBase, osSep)
+			//zipinArchive(zipWriter, newBase, myArchive, osSep)
 		}
 	}
 }
 
+//func zipinArchive(workingDir *string, action_zip *string, osSep string) {
+//fpf(os.Stdout, "Creating zip archive... %s\n", *action_zip)
+
+//fileNames, err := os.ReadDir(*workingDir)
+//if err != nil {
+//log.Fatal(err)
+//}
+//
+//archive, err := os.Create(*workingDir + osSep + *action_zip)
+//if err != nil {
+//log.Fatal(err)
+//}
+//defer archive.Close()
+//
+//zipWriter := zip.NewWriter(archive)
+//defer zipWriter.Close()
+
+//for _, file := range fileNames {
+//fpf(os.Stdout, "Archiving file.... %s\n", file)
+
+//files, err := os.Open(file.Name())
+//if err != nil {
+//log.Fatal(err)
+//}
+//defer files.Close()
+//
+//writer, err := zipWriter.Create(files.Name())
+//if err != nil {
+//log.Fatal(err)
+//}
+
+//if _, err := io.Copy(writer, files); err != nil {
+//log.Fatal(err)
+//}
+//}
+//}
+
 func unZipArchive(workingDir *string, action_unzip *string, osSep string) {
 	dest := *action_unzip
 
-	fpf(os.Stdout, "Opening zip archive... %s\n", *action_unzip)
+	//fpf(os.Stdout, "Opening zip archive... %s\n", *action_unzip)
 
 	archive, err := zip.OpenReader(*workingDir + osSep + *action_unzip)
 	if err != nil {
@@ -60,7 +99,7 @@ func unZipArchive(workingDir *string, action_unzip *string, osSep string) {
 	for _, file := range archive.File {
 		filePath := filepath.Join(strings.TrimSuffix(dest, filepath.Ext(dest)), file.Name)
 
-		fpf(os.Stdout, "Unzipping file... %s\n", filePath)
+		//fpf(os.Stdout, "Unzipping file... %s\n", filePath)
 
 		if file.FileInfo().IsDir() {
 			if err := os.MkdirAll(filePath, os.ModePerm); err != nil {

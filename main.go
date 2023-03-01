@@ -1,6 +1,9 @@
 package main
 
 import (
+	"archive/tar"
+	"archive/zip"
+	"compress/gzip"
 	"flag"
 	"fmt"
 	"log"
@@ -27,13 +30,46 @@ func main() {
 
 	switch {
 	case *action_zip != "":
-		zipinArchive(&workingDir, action_zip, osSep)
+		archive, err := os.Create(workingDir + osSep + *action_zip)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer archive.Close()
+
+		zipWriter := zip.NewWriter(archive)
+		defer zipWriter.Close()
+
+		// zipinArchive(zipWriter, workingDir, "", myArchive, osSep)
+		zipinArchive(zipWriter, workingDir, *action_zip, osSep)
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		err = zipWriter.Close()
+		if err != nil {
+			log.Println(err)
+		}
+		//zipinArchive(&workingDir, action_zip, osSep)
 
 	case *action_unzip != "":
 		unZipArchive(&workingDir, action_unzip, osSep)
 
 	case *action_targz != "":
-		tarGzipArchive(&workingDir, action_targz, osSep)
+		archive, err := os.Create(workingDir + osSep + *action_targz)
+		if err != nil {
+			lff("Tar: archive: Create(): failed: %w", err.Error())
+		}
+		defer archive.Close()
+
+		gzWriter := gzip.NewWriter(archive)
+		defer gzWriter.Close()
+
+		tarWriter := tar.NewWriter(gzWriter)
+		defer tarWriter.Close()
+
+		tarGzipArchive(tarWriter, workingDir, *action_targz, osSep)
+		//		tarGzipArchive(&workingDir, action_targz, osSep)
 
 	case *action_utargz != "":
 		utarGzipArchive(&workingDir, action_utargz, osSep)

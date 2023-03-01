@@ -40,7 +40,7 @@ clean:
 	@rm -rf $(BUILDPATH)/bin/$(EXENAME)-linux
 	@rm -rf $(BUILDPATH)/bin/$(EXENAME)-darwin
 	@rm -rf $(BUILDPATH)/bin/$(EXENAME).exe
-	@rm -rf $(BUILDPATH)/pkg
+	#@rm -rf $(BUILDPATH)/pkg
 
 install:
 	@echo "installing zipxf..either /usr/local/go/bin or /usr/local/bin...."
