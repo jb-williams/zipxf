@@ -17,7 +17,7 @@ func zipinArchive(zipWriter *zip.Writer, workingDir, myArchive, osSep string) {
 	}
 
 	for _, file := range fileNames {
-		if !file.IsDir() && file.Name() != myArchive {
+		if !file.IsDir() && file.Name() != myArchive && file.Name() != ".git" {
 			//fpf(os.Stdout, "Archiving file.... %s\n", file)
 
 			files, err := os.ReadFile(workingDir + osSep + file.Name())
