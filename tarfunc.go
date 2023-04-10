@@ -18,7 +18,7 @@ func tarGzipArchive(tarWriter *tar.Writer, workingDir, myArchive, osSep string) 
 	}
 
 	for _, file := range fileNames {
-		if !file.IsDir() && file.Name() != myArchive {
+		if !file.IsDir() && file.Name() != myArchive && file.Name() != ".git" {
 			//fpf(os.Stdout, "Archiving file.... %s\n", file)
 			//if file.IsDir() {
 			//}
@@ -50,7 +50,7 @@ func tarGzipArchive(tarWriter *tar.Writer, workingDir, myArchive, osSep string) 
 				log.Fatal(err)
 				lff("Tar: Last: Copy(): failed: %w", err.Error())
 			}
-		} else if file.IsDir() && file.Name() != myArchive {
+		} else if file.IsDir() && file.Name() != myArchive && file.Name() != ".git" {
 			newBase := workingDir + osSep + file.Name()
 			tarGzipArchive(tarWriter, newBase, myArchive, osSep)
 		}
