@@ -1,9 +1,7 @@
 package main
 
 import (
-	"archive/tar"
 	"archive/zip"
-	"compress/gzip"
 	"flag"
 	"fmt"
 	"log"
@@ -16,9 +14,9 @@ var lff = log.Fatalf
 func main() {
 	help := flag.Bool("h", false, "Show help")
 	action_zip := flag.String("z", "", "Zip all files in current working dir into an Archive.")
-	action_unzip := flag.String("uz", "", "Unzip Archive into current working dir.")
-	action_targz := flag.String("t", "", "Tar Gz all in current working dir.")
-	action_utargz := flag.String("ut", "", "Un-Tar Gz all in current working dir.")
+	//action_unzip := flag.String("uz", "", "Unzip Archive into current working dir.")
+	//action_targz := flag.String("t", "", "Tar Gz all in current working dir.")
+	//action_utargz := flag.String("ut", "", "Un-Tar Gz all in current working dir.")
 	flag.Parse()
 
 	workingDir, err := os.Getwd()
@@ -52,27 +50,27 @@ func main() {
 		}
 		//zipinArchive(&workingDir, action_zip, osSep)
 
-	case *action_unzip != "":
-		unZipArchive(&workingDir, action_unzip, osSep)
+	//case *action_unzip != "":
+	//unZipArchive(&workingDir, action_unzip, osSep)
 
-	case *action_targz != "":
-		archive, err := os.Create(workingDir + osSep + *action_targz)
-		if err != nil {
-			lff("Tar: archive: Create(): failed: %w", err.Error())
-		}
-		defer archive.Close()
+	//case *action_targz != "":
+	//archive, err := os.Create(workingDir + osSep + *action_targz)
+	//if err != nil {
+	//lff("Tar: archive: Create(): failed: %w", err.Error())
+	//}
+	//defer archive.Close()
 
-		gzWriter := gzip.NewWriter(archive)
-		defer gzWriter.Close()
+	//gzWriter := gzip.NewWriter(archive)
+	//defer gzWriter.Close()
 
-		tarWriter := tar.NewWriter(gzWriter)
-		defer tarWriter.Close()
+	//tarWriter := tar.NewWriter(gzWriter)
+	//defer tarWriter.Close()
 
-		tarGzipArchive(tarWriter, workingDir, *action_targz, osSep)
-		//		tarGzipArchive(&workingDir, action_targz, osSep)
+	//tarGzipArchive(tarWriter, workingDir, *action_targz, osSep)
+	//		tarGzipArchive(&workingDir, action_targz, osSep)
 
-	case *action_utargz != "":
-		utarGzipArchive(&workingDir, action_utargz, osSep)
+	//case *action_utargz != "":
+	//utarGzipArchive(&workingDir, action_utargz, osSep)
 
 	case *help:
 		flag.Usage()

@@ -5,8 +5,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"path/filepath"
-	"strings"
 )
 
 func zipinArchive(zipWriter *zip.Writer, workingDir, myArchive, osSep string) {
@@ -33,16 +31,17 @@ func zipinArchive(zipWriter *zip.Writer, workingDir, myArchive, osSep string) {
 			if err != nil {
 				log.Fatal(err)
 			}
-			// if _, err := io.Copy(writer, files); err != nil {
-			// 	log.Fatal(err)
-			// }
-		} else if file.IsDir() && file.Name() != myArchive {
+			if _, err := io.Copy(writer); err != nil {
+				log.Fatal(err)
+			}
+		} else if file.IsDir() && file.Name() != myArchive && file.Name() != ".git" {
 			newBase := workingDir + osSep + file.Name()
 			if err := os.MkdirAll(newBase, os.ModePerm); err != nil {
 				log.Fatal(err)
 			}
+			newArchive := myArchive + osSep + file.Name()
 
-			zipinArchive(zipWriter, newBase, newBase, osSep)
+			zipinArchive(zipWriter, newBase, newArchive, osSep)
 			//zipinArchive(zipWriter, newBase, myArchive, osSep)
 		}
 	}
@@ -85,48 +84,48 @@ func zipinArchive(zipWriter *zip.Writer, workingDir, myArchive, osSep string) {
 //}
 //}
 
-func unZipArchive(workingDir *string, action_unzip *string, osSep string) {
-	dest := *action_unzip
+// func unZipArchive(workingDir *string, action_unzip *string, osSep string) {
+// 	dest := *action_unzip
 
-	//fpf(os.Stdout, "Opening zip archive... %s\n", *action_unzip)
+// 	//fpf(os.Stdout, "Opening zip archive... %s\n", *action_unzip)
 
-	archive, err := zip.OpenReader(*workingDir + osSep + *action_unzip)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer archive.Close()
+// 	archive, err := zip.OpenReader(*workingDir + osSep + *action_unzip)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	defer archive.Close()
 
-	for _, file := range archive.File {
-		filePath := filepath.Join(strings.TrimSuffix(dest, filepath.Ext(dest)), file.Name)
+// 	for _, file := range archive.File {
+// 		filePath := filepath.Join(strings.TrimSuffix(dest, filepath.Ext(dest)), file.Name)
 
-		//fpf(os.Stdout, "Unzipping file... %s\n", filePath)
+// 		//fpf(os.Stdout, "Unzipping file... %s\n", filePath)
 
-		if file.FileInfo().IsDir() {
-			if err := os.MkdirAll(filePath, os.ModePerm); err != nil {
-				log.Fatal(err)
-			}
-			continue
-		}
+// 		if file.FileInfo().IsDir() {
+// 			if err := os.MkdirAll(filePath, os.ModePerm); err != nil {
+// 				log.Fatal(err)
+// 			}
+// 			continue
+// 		}
 
-		if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
-			log.Fatal(err)
-		}
+// 		if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
+// 			log.Fatal(err)
+// 		}
 
-		destFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, file.Mode())
-		if err != nil {
-			log.Fatal(err)
-		}
+// 		destFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, file.Mode())
+// 		if err != nil {
+// 			log.Fatal(err)
+// 		}
 
-		fileInArchive, err := file.Open()
-		if err != nil {
-			log.Fatal(err)
-		}
+// 		fileInArchive, err := file.Open()
+// 		if err != nil {
+// 			log.Fatal(err)
+// 		}
 
-		if _, err := io.Copy(destFile, fileInArchive); err != nil {
-			log.Fatal(err)
-		}
+// 		if _, err := io.Copy(destFile, fileInArchive); err != nil {
+// 			log.Fatal(err)
+// 		}
 
-		destFile.Close()
-		fileInArchive.Close()
-	}
-}
+// 		destFile.Close()
+// 		fileInArchive.Close()
+// 	}
+// }
