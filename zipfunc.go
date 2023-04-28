@@ -48,43 +48,6 @@ func zipinArchive(zipWriter *zip.Writer, workingDir, myArchive, osSep string) {
 	}
 }
 
-//func zipinArchive(workingDir *string, action_zip *string, osSep string) {
-//fpf(os.Stdout, "Creating zip archive... %s\n", *action_zip)
-
-//fileNames, err := os.ReadDir(*workingDir)
-//if err != nil {
-//log.Fatal(err)
-//}
-//
-//archive, err := os.Create(*workingDir + osSep + *action_zip)
-//if err != nil {
-//log.Fatal(err)
-//}
-//defer archive.Close()
-//
-//zipWriter := zip.NewWriter(archive)
-//defer zipWriter.Close()
-
-//for _, file := range fileNames {
-//fpf(os.Stdout, "Archiving file.... %s\n", file)
-
-//files, err := os.Open(file.Name())
-//if err != nil {
-//log.Fatal(err)
-//}
-//defer files.Close()
-//
-//writer, err := zipWriter.Create(files.Name())
-//if err != nil {
-//log.Fatal(err)
-//}
-
-//if _, err := io.Copy(writer, files); err != nil {
-//log.Fatal(err)
-//}
-//}
-//}
-
 func unZipArchive(workingDir *string, action_unzip *string, osSep string) {
 	dest := *action_unzip
 
@@ -98,8 +61,6 @@ func unZipArchive(workingDir *string, action_unzip *string, osSep string) {
 
 	for _, file := range archive.File {
 		filePath := filepath.Join(strings.TrimSuffix(dest, filepath.Ext(dest)), file.Name)
-
-		//fpf(os.Stdout, "Unzipping file... %s\n", filePath)
 
 		if file.FileInfo().IsDir() {
 			if err := os.MkdirAll(filePath, os.ModePerm); err != nil {
