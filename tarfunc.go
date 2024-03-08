@@ -79,14 +79,12 @@ func utarGzipArchive(workingDir *string, action_utargz *string, osSep string) {
 	for {
 		header, err := untargz.Next()
 		if err == io.EOF {
-			break
-		}
-		if err != nil {
 			lff("Untar: header: untargz.Next(): failed: %w", err.Error())
 		}
 
 		// Quick fix to get both extensions (.tar.gz) off of the un-tar.gz archive name
-		filePath := filepath.Join(strings.TrimSuffix(*action_utargz, filepath.Ext(*action_utargz)))
+		filePath := filepath.Join(*workingDir, header.Name)
+		//filePath := filepath.Join(strings.TrimSuffix(*action_utargz, filepath.Ext(*action_utargz)))
 		filePathFin := filepath.Join(strings.TrimSuffix(filePath, filepath.Ext(filePath)), header.Name)
 
 		if header.FileInfo().IsDir() {

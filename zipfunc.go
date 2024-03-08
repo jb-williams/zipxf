@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 func zipinArchive(zipWriter *zip.Writer, workingDir, myArchive, osSep string) {
@@ -53,14 +52,17 @@ func unZipArchive(workingDir *string, action_unzip *string, osSep string) {
 
 	//fpf(os.Stdout, "Opening zip archive... %s\n", *action_unzip)
 
-	archive, err := zip.OpenReader(*workingDir + osSep + *action_unzip)
+	archive, err := zip.OpenReader(*workingDir + osSep + dest)
+	//archive, err := zip.OpenReader(*workingDir + osSep + *action_unzip)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer archive.Close()
 
+	//for _, file := range archive.File {
+	//filePath := filepath.Join(strings.TrimSuffix(dest, filepath.Ext(dest)), file.Name)
 	for _, file := range archive.File {
-		filePath := filepath.Join(strings.TrimSuffix(dest, filepath.Ext(dest)), file.Name)
+		filePath := filepath.Join(*workingDir, file.Name)
 
 		if file.FileInfo().IsDir() {
 			if err := os.MkdirAll(filePath, os.ModePerm); err != nil {
